@@ -17,5 +17,8 @@ node_modules/
 # Optional npm cache directory
 .npm
 
+# npm built packages
+*.tgz
+
 # Optional eslint cache
 .eslintcache

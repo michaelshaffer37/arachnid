@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .js ./",
+    "lint:fix": "eslint --fix --ext .js ./",
     "test": "npm run -s unit-coverage && npm run -s func",
     "unit": "jasmine --config=spec/unit/support/jasmine.json",
     "func": "jasmine --config=spec/functional/support/jasmine.json",
@@ -24,7 +25,7 @@
     "eventEmmiter"
   ],
   "author": "Michael Shaffer",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "eslint": "^4.5.0",
     "eslint-config-airbnb-base": "^11.3.2",
