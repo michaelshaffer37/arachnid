@@ -1,0 +1,40 @@
+{
+  "name": "arachnid",
+  "version": "0.0.1",
+  "description": "A nodejs web scraper for gathering content.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ext .js ./",
+    "test": "npm run -s unit-coverage && npm run -s func",
+    "unit": "jasmine --config=spec/unit/support/jasmine.json",
+    "func": "jasmine --config=spec/functional/support/jasmine.json",
+    "unit-coverage": "nyc npm run -s unit",
+    "watch:lint": "watch 'npm run -s lint' ./",
+    "watch:unit": "watch 'npm run -s unit' ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com:michaelshaffer37/arachnid"
+  },
+  "keywords": [
+    "arachnid",
+    "scraper",
+    "extendable",
+    "promise",
+    "eventEmmiter"
+  ],
+  "author": "Michael Shaffer",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.5.0",
+    "eslint-config-airbnb-base": "^11.3.2",
+    "eslint-plugin-import": "^2.7.0",
+    "jasmine": "^2.8.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "nyc": "^11.1.0",
+    "watch": "^1.0.2"
+  },
+  "dependencies": {
+    "node-fetch": "^1.7.2"
+  }
+}

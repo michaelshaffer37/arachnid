@@ -1,0 +1,21 @@
+# Logs
+*.log
+npm-debug.log*
+
+# IntelliJ IDE config dir
+.idea/
+
+# Coverage directory used by istanbul
+coverage
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache

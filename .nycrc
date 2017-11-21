@@ -1,0 +1,17 @@
+{
+    "all": true,
+    "watermarks": {
+      "lines": [80, 85],
+      "functions": [80, 85],
+      "branches": [80, 85],
+      "statements": [80, 85]
+    },
+    "exclude": [
+      "spec"
+    ],
+    "reporter": [
+      "html",
+      "text-summary"
+  ],
+  "report-dir": "./spec/unit/coverage"
+}
