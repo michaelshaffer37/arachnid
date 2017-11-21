@@ -1,9 +1,14 @@
+const fetch = require('node-fetch');
 const util = require('util');
 const EventEmitter = require('events');
 const localTransforms = require('./transforms');
 const tense = require('./support/tense');
 const extendArachnid = require('./support/extendArachnid');
-const process = require('./process');
+
+const state = {
+  finished: 0,
+  running: 0,
+};
 
 /**
  * Arachnid
@@ -27,6 +32,10 @@ function Arachnid(urls = [], options = {}) {
     this.on(tense.past('load'), this.start);
   }
 
+  this.on('pause', () => {
+    this.running = false;
+  });
+
   this.load(urls);
 }
 
@@ -38,7 +47,7 @@ util.inherits(Arachnid, EventEmitter);
 const noop = () => Promise.resolve();
 
 /**
- * Loads the provided url or urls into the scraper for later processing.
+ * Loads the provided url or urls into the crawler for later processing.
  *
  * @param {String|Array.<String>} urls
  *
@@ -55,17 +64,75 @@ Arachnid.prototype.load = function load(urls) {
 };
 
 /**
- * Start the scraper at scraping the loaded urls.
+ * Start the scraper at scraping the loaded actions.
  *
- * @return {Boolean}  true if the scraper was not previously running false otherwise.
+ * @return {Arachnid}
  */
 Arachnid.prototype.start = function start() {
   if (!this.running) {
     this.running = true;
-    process(this);
-    return true;
+    this.operate();
   }
-  return false;
+  return this;
+};
+
+/**
+ * Processes the number of actions that as can be run concurrently.
+ *
+ * @return {Arachnid}
+ */
+Arachnid.prototype.operate = function operate() {
+  const toStart = this.concurent - state.running;
+
+  for (let i = 0; i < toStart; i += 1) {
+    this.process();
+  }
+  return this;
+};
+
+/**
+ * Process the first action off the top of the stack.
+ */
+Arachnid.prototype.process = function process() {
+  if (this.hasActions() && this.concurent > state.running) {
+    state.running += 1;
+    const url = this.urls.pop();
+    const requestEvent = {
+      url,
+      req: {
+        method: 'GET',
+      },
+    };
+
+    this.emitTransform('request', requestEvent, event => fetch(event.url, event.req))
+      .then((response) => {
+        this.emit('response', response);
+        return response.text();
+      })
+      .then((body) => {
+        this.emitTransform('parse', { body }, bodyEvent => bodyEvent);
+      })
+      .catch((err) => {
+        this.emit('error', err);
+      })
+      .then(() => {
+        state.running -= 1;
+        state.finished += 1;
+        if (this.urls.length <= 0 && state.running <= 0) {
+          this.emit('pause');
+        }
+        this.operate();
+      });
+  }
+};
+
+/**
+ * Determines if there are any available actions for the crawler to take.
+ *
+ * @return {Boolean}
+ */
+Arachnid.prototype.hasActions = function hasActions() {
+  return this.urls.length > 0;
 };
 
 /**
