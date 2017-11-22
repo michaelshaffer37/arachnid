@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const request = require('request-promise-native');
 const util = require('util');
 const EventEmitter = require('events');
 const localTransforms = require('./transforms');
@@ -99,15 +99,13 @@ Arachnid.prototype.process = function process() {
     const url = this.urls.pop();
     const requestEvent = {
       url,
-      req: {
-        method: 'GET',
-      },
+      resolveWithFullResponse: true,
     };
 
-    this.emitTransform('request', requestEvent, event => fetch(event.url, event.req))
+    this.emitTransform('request', requestEvent, event => request(event))
       .then((response) => {
         this.emit('response', response);
-        return response.text();
+        return response.body;
       })
       .then((body) => {
         this.emitTransform('parse', { body }, bodyEvent => bodyEvent);
