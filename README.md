@@ -1,5 +1,7 @@
 # Arachnid
 
+[![Build Status](https://travis-ci.org/michaelshaffer37/arachnid.svg?branch=master)](https://travis-ci.org/michaelshaffer37/arachnid)
+
 An event based library for scrapping web content.
 
 ## Simple Usage
