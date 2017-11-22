@@ -5,6 +5,10 @@ node_js:
   - "8"
   - "node"
 
+script:
+  - npm run -s test
+  - npm run -s lint
+
 cache:
   directories:
     - "node_modules"
